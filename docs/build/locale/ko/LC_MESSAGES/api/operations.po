@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../api/operations.rst:5
 msgid "Operation Directives"
-msgstr ""
+msgstr "동작 명령"
 
 #: ../api/operations.rst:7
 msgid ""

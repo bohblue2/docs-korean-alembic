@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../api/overview.rst:3
 msgid "Overview"
-msgstr ""
+msgstr "개요"
 
 #: ../api/overview.rst:5
 msgid ""
@@ -28,6 +28,9 @@ msgid ""
 "capabilities of Alembic; for regular users, reading this section is **not"
 " necessary**."
 msgstr ""
+"이 절은 알렘빅 API의 내부에 대한 기술적 설명이다. "
+"알렘빅 기능을 확장하려믄 개발자들에게 유용한 내용이다. "
+"일반 사용자는 이 절을 읽을 필요가 없다."
 
 #: ../api/overview.rst:11
 msgid ""
