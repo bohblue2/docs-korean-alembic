@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../offline.rst:2
 msgid "Generating SQL Scripts (a.k.a. \"Offline Mode\")"
-msgstr ""
+msgstr "SQL 스크립트 생성(\"오프라인 모드\")"
 
 #: ../offline.rst:4
 msgid ""
@@ -31,6 +31,11 @@ msgid ""
 "passed to any ``upgrade`` or ``downgrade`` command.   We can, for "
 "example, generate a script that revises up to rev ``ae1027a6acf``::"
 msgstr ""
+"Alembic의 주요 기능은 데이터베이스에 대해 실행하는 대신 SQL 스크립트로 마이그레이션을 "
+"생성하는 것이다(이는 주로 *오프라인 모드* 라고 불린다). 이것은 DDL에 대한 엑세스가 제한되"
+"어 있고 SQL 스크립트를 DBA에 전달해야하는 대규모 조직에서 작업 할 때 중요한 기능이다."
+"Alembic은 ``--sql`` ``upgrade``\ 나 ``downgrade``\ 명령어에 전달 된 옵션을 통해 이것을"
+"쉽게 만든다. 아래와 같이 예를 들어 rev ``ae1027a6acf``\ 까지 수정하는 스크립트를 생성할 수 있다."
 
 #: ../offline.rst:36
 msgid ""
@@ -39,10 +44,15 @@ msgid ""
 "configuration (described later in this section), we'd at first be using "
 "output redirection to generate a script::"
 msgstr ""
+"로깅 설정이 표준 오류로 덤프되는 동안 실제 스크립트는 표준 출력으로 덤프되었으므로 "
+"추가 설정 (이 절의 뒷부분에서 설명)이없는 경우 스크립트를 생성하기 위해 먼저 출력 "
+"리디렉션을 사용한다.::"
 
 #: ../offline.rst:43
 msgid "Getting the Start Version"
-msgstr ""
+msgstr "시작 버전 사용하기"
+
+# Start Here
 
 #: ../offline.rst:45
 msgid ""
@@ -50,6 +60,8 @@ msgid ""
 "default when using offline mode, as no database connection is present and"
 " there's no ``alembic_version`` table to read from."
 msgstr ""
+"마이그레이션 스크립트는 베이스에서 시작된다. 이는 데이터베이스 연결이 없으며 "
+"``alembic_version``\ 읽을 테이블이 없으므로 오프라인 모드를 사용할 때의 기본값 이다."
 
 #: ../offline.rst:48
 msgid ""
@@ -57,6 +69,8 @@ msgid ""
 "range to the command line. This is accomplished by providing the "
 "\"version\" in ``start:end`` syntax::"
 msgstr ""
+"오프라인 모드에서 시작 버전을 제공하는 한 가지 방법은 명령 줄에 범위를 제공하는 것이다. "
+"이것은 ``start:end``\ 구문 에서 \"버전\"을 제공하여 수행된다."
 
 #: ../offline.rst:53
 msgid ""
@@ -64,6 +78,8 @@ msgid ""
 "mode, the ``alembic_version`` table is always used to get at the current "
 "version."
 msgstr ""
+"``start:end``\ 구문은 오프라인 모드에서 허용된다; \"온라인\" 모드에서 ``alembic_version``\ "
+"테이블은 항상 현재 버전을 가져 오는 데 사용된다."
 
 #: ../offline.rst:56
 msgid ""
@@ -72,10 +88,14 @@ msgid ""
 " like this would basically treat a local file in the same way "
 "``alembic_version`` works::"
 msgstr ""
+"또한 ``env.py``\ 스크립트가 로컬 파일에서와 같이 로컬 환경에서 \"마지막\"\ 버전을 검색하도록 "
+"할 수도 있다. 이와 같은 체계는 기본적으로 로컬 파일을 ``alembic_version``\ 작동방식 과 "
+"동일한 방식으로 처리 한다::"
+
 
 #: ../offline.rst:73
 msgid "Writing Migration Scripts to Support Script Generation"
-msgstr ""
+msgstr "스크립트 생성을 지원하는 마이그레이션 스크립트 작성"
 
 #: ../offline.rst:75
 msgid ""
@@ -87,10 +107,15 @@ msgid ""
 "both \"live execution\" as well as \"offline SQL generation\" mode, are "
 "used."
 msgstr ""
+"SQL 스크립트 생성의 문제점은 우리가 생성하는 스크립트가 클라이언트/ "
+"서버 데이터베이스 액세스에 의존 할 수 없다는 것이다. 즉, ``SELECT``\ 명령문을 "
+"통해 메모리로 일부 행을 가져 오는 마이그레이션 스크립트 는 ``--sql``\ 모드 에서 작동하지 않는다 ."
+"Alembic 지시어도 (모두 \"실행중인 SQL\"\ 및 \"오프라인 SQL 생성\" 모드 모두에서 작동하도록 특별히 설계된)"
+"사용하는 것이 중요하다."
 
 #: ../offline.rst:82
 msgid "Customizing the Environment"
-msgstr ""
+msgstr "환경을 사용자 정의하기"
 
 #: ../offline.rst:84
 msgid ""
@@ -102,6 +127,12 @@ msgid ""
 ":meth:`.EnvironmentContext.is_offline_mode`, which basically determines "
 "if the ``--sql`` flag was enabled."
 msgstr ""
+"``--sql``\ 옵션 사용자는 ``env.py``\ 필요에 맞게 파일을 변경(hack)하는 것이 좋다. "
+"``env.py``\ 제공 등의 스크립트는 ``run_migrations_online()``\ 와 ``run_migrations_offline()``\ "
+"두 부분으로 나뉜다. 어떤 함수가 실행되는지 결정하는 때는 아래 예제의 바닥에 있는 "
+":meth:`.EnvironmentContext.is_offline_mode()`\ 함수를 읽으면서 결정된다. "
+":meth:`.EnvironmentContext.is_offline_mode()`\ 함수는 기본적으로 ``--sql`` 플래그가 "
+"활성화 되었는지 여부를 판별 한다."
 
 #: ../offline.rst:90
 msgid ""
@@ -111,4 +142,8 @@ msgid ""
 "parameter ``output_buffer`` for this purpose.  Below we illustrate this "
 "within the ``run_migrations_offline()`` function::"
 msgstr ""
+"예를 들어 다중 데이터베이스 구성은 각 데이터베이스를 통해 실행하고 "
+"마이그레이션의 출력을 다른 이름으로 된 파일로 설정하려고 할 수 있다."
+"이 :meth:`.EnvironmentContext.configure()`\ 함수는 파라미터 ``output_buffer``\을 이 용도로 사용한다."
+"아래 예제에서는 ``run_migrations_offline()`` 함수 내에서 이를 보여준다::"
 

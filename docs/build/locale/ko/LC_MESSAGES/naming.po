@@ -19,7 +19,7 @@ msgstr ""
 
 #: ../naming.rst:4
 msgid "The Importance of Naming Constraints"
-msgstr ""
+msgstr "명명 규칙의 중요성"
 
 #: ../naming.rst:6
 msgid ""
@@ -33,6 +33,14 @@ msgid ""
 "when the constraint is created.  For example, if you emitted two CREATE "
 "TABLE statements like this on Postgresql::"
 msgstr ""
+"언급할만한 중요한 주제는 제약 명명 규칙이다. "
+"지금까지 살펴본 바와 같이 우리는 테이블과 컬럼을 추가하는 방법에 대해 살펴 보았다. "
+"외래 키나 고유 한 제약 조건과 같은 제약 조건을 추가하거나 삭제하는 것과 같은 연산들은"
+":ref:`ops`\ 에 나열되어 있다."
+"마이그레이션 스크립트에서 이러한 제한 조건을 참조하는 것은 이름으로되어 있지만 대부분의"
+"경우 이 이름은 제한 조건이 작성 될 때 사용중인 관계형 데이터베이스에 의해 생선된다.. "
+"예를 들어 Postgresql에서 다음과 같은 두 개의 CREATE TABLE 문을 내 보낸 경우 "
+"다음과 같이 된다::"
 
 #: ../naming.rst:22
 msgid ""
@@ -43,12 +51,17 @@ msgid ""
 "But both of those functions need a name - what's the name of this "
 "constraint?"
 msgstr ""
+"방금 ``user_order.user_account_id`` 열에 적용한 참조를 삭제한다고 가정 한다. "
+"어떻게 할 수 있나? 프롬프트에서 우리는 ``ALTER TABLE <tablename> DROP CONSTRAINT <constraint_name>``\ "
+"을 사용 하거나, Alembic의  :meth:`.Operations.drop_constraint`\ 을 사용할 수 있다. "
+"그러나 이 두 함수 모두 이름이 필요하다. 이 제약 조건의 이름은 무엇인가?"
 
 #: ../naming.rst:28
 msgid ""
 "It does have a name, which in this case we can figure out by looking at "
 "the Postgresql catalog tables::"
 msgstr ""
+"여기에는 Postgresql 카탈로그 테이블을보고 알아낼 수 있는 이름이 있다::"
 
 #: ../naming.rst:41
 msgid ""
@@ -56,6 +69,9 @@ msgid ""
 "``user_order_user_account_id_fkey`` is a naming scheme used internally by"
 " Postgresql to name constraints that are otherwise not named."
 msgstr ""
+"위의 이름은 Alembic 또는 SQLAlchemy에서 만든 것이 아니다. "
+"``user_order_user_account_id_fkey``\ 은 Postgresql에서 내부적으로 사용하는 명명 체계"
+"이다. 만약 이것을 사용하지 않으면 명명되지 않는다."
 
 #: ../naming.rst:45
 msgid ""
@@ -66,6 +82,11 @@ msgid ""
 "certainly Oracle uses this same scheme, right?  Or if not, something "
 "similar.  Let's check::"
 msgstr ""
+"이 계획은 그렇게 복잡하지는 않다. "
+"우리는 우리의 지식을 사용하여 :meth:`.Operations.drop_constraint()` 호출 할 때 사용할 "
+"이름을 알기 원한다. 그러나 그게 좋은 생각인가? 예를 들어 오라클에서도 코드를 "
+"실행해야한다면 어떻게 되는가? 오라클은 확실히 아래와 같은 구성표를 사용한다. "
+"맞는가? 그렇지 않다면 비슷한 것이다. 점검 해보라::"
 
 #: ../naming.rst:71
 msgid ""
@@ -73,6 +94,9 @@ msgid ""
 "unpredictable alphanumeric codes, and this will make being able to write "
 "migrations quite tedious, as we'd need to look up all these names."
 msgstr ""
+"오, 우리는 그것이 ..... 더 심하다는 것을 알 수 있다. "
+"오라클의 이름은 완전히 예측할 수없는 영숫자 코드이다. 따라서 이러한 이름을 모두 찾아야하므로 "
+"마이그레이션이 매우 어려울 수 있다."
 
 #: ../naming.rst:75
 msgid ""
@@ -81,6 +105,9 @@ msgid ""
 " our model in SQLAlchemy ensuring we use names for foreign key "
 "constraints would look like::"
 msgstr ""
+"이렇게 복잡한 이름을 찾아야하는(look-up) 해결책은 자신의 이름을 만드는 것이다. "
+"이것은 수동으로하기는 쉽지만 지루한 일이다. 예를 들어 SQLAlchemy에 모델을 만들면 "
+"외래 키 제약 조건에 이름을 사용할 수 있다::"
 
 #: ../naming.rst:93
 msgid ""
@@ -95,6 +122,15 @@ msgid ""
 "globally unique.   Even with all that effort, if we have a naming scheme "
 "in mind, it's easy to get it wrong when doing it manually each time."
 msgstr ""
+"이것에는 몇 가지 단점이 있지만 충분히 간단하다. "
+"첫 번째는 지루한 일입니다. 우리는 다음과 같은 모든 이름을 기억해야 할 필요가 있다. "
+":class:`~sqlalchemy.schema.ForeignKey`\ 는 말할 것도 없고, "
+":class:`~sqlalchemy.schema.UniqueConstraint`, "
+":class:`~sqlalchemy.schema.CheckConstraint`, "
+":class:`~sqlalchemy.schema.Index`, "
+":class:`~sqlalchemy.schema.PrimaryKeyConstraint`\, 이 뿐만 아니라 우리가 이 모든 것들을 변경할 "
+"수 있고 따라서 모든 이름은 전역 적으로 고유해야할 수도 있다. 이 모든 노력에도 불구하고 "
+"우리가 명명 체계를 머리속에 염두하고 있을지라도 매회 수동으로 할 때 잘못되기 쉽다."
 
 #: ../naming.rst:101
 msgid ""
@@ -103,6 +139,8 @@ msgid ""
 "the ``.unique=True`` or ``.index=True`` flag on "
 ":class:`~sqlalchemy.schema.Column`::"
 msgstr ""
+"최악의 경우 수동으로 명명 된 제약 조건 (및 인덱스)은 더 이상 :class:`~sqlalchemy.schema.Column`\ 에"
+" ``.unique=True``\ 또는 ``.index=True``\와 같은 편리한 기능을 사용할 수 없다는 점이 있다."
 
 #: ../naming.rst:110
 msgid ""
@@ -111,6 +149,8 @@ msgid ""
 "   If we want to name it, manually we have to forego the usage of "
 "``unique=True`` and type out the whole constraint::"
 msgstr ""
+"위의 ``unique=True``\ 플래그는 :class:`~sqlalchemy.schema.UniqueConstraint`\ 를 만들지만 다시 명명되지 않는다. "
+"이름을 지정하고 싶다면 수동으로 ``unique=True``\ 사용을 제한하고 아래와 같이 전체 제약 조건을 입력해야한다.::"
 
 #: ../naming.rst:120
 msgid ""
@@ -125,6 +165,12 @@ msgid ""
 "``.name`` to the constraint while making use of the name of the table and"
 " associated columns."
 msgstr ""
+"이 명명 작업에는 **자동화 된 명명 규칙** 을 사용하는 해결법이 있따. "
+"몇 년 동안 SQLAlchemy는 명명 스키마를 만들기 위해 DDL 이벤트 사용을 장려했다. "
+"특히 :meth:`~sqlalchemy.events.DDLEvents.after_parent_attach`\ 이벤트는 "
+"Constraint 및 Index 객체가 부모 Table 객체와 연관되어질 때나, "
+"테이블 및 관련 컬럼의 이름을 사용하면서 ``.name``\ 을 제약 조건에 할당할때 "
+"가로채기 좋은 이벤트이다."
 
 #: ../naming.rst:128
 msgid ""
@@ -134,6 +180,10 @@ msgid ""
 "Here, we can create a new :class:`~sqlalchemy.schema.MetaData` object "
 "while passing a dictionary referring to a naming scheme::"
 msgstr ""
+"그러나 SQLAlchemy 0.9.2에서 :paramref:`~sqlalchemy.schema.MetaData.naming_convention`\ 이벤트를 넘어"
+"새로운 기능을 사용하는 더 나은 방법이 있다. "
+"여기서는 명명 스키마를 참조하여 사전을 명명 스키마에 전달하면서 새 :class:`~sqlalchemy.schema.MetaData`\ 객체를 만들 "
+"수 있다."
 
 #: ../naming.rst:144
 msgid ""
@@ -141,10 +191,12 @@ msgid ""
 "above, the given naming convention dictionary will be used to provide "
 "names for all constraints and indexes."
 msgstr ""
+"위와 같이 :class:`~sqlalchemy.schema.MetaData`\ 를 사용하여 모델을 정의 하면 "
+"주어진 명명 규칙 사전을 사용하여 모든 제약 조건과 색인의 이름을 제공한다."
 
 #: ../naming.rst:151
 msgid "Integration of Naming Conventions into Operations, Autogenerate"
-msgstr ""
+msgstr "작업에 이름 지정 규칙 통합, 자동 생성"
 
 #: ../naming.rst:153
 msgid ""
@@ -155,10 +207,13 @@ msgid ""
 ":paramref:`.MigrationsContext.configure.target_metadata` parameter in "
 "``env.py``, which is normally configured when autogenerate is used::"
 msgstr ""
-
+"Alembic 0.6.4부터는 명명 규칙 기능이 :class:`.Operations`\ 객체에 통합되어 있으므로 명명되지 "
+"않은 모든 제약 조건에 적용된다. autogenerate가 사용될 때 일반적으로 구성되는 매개 "
+"변수(``env.py``\ 안에 있는) :paramref:`.MigrationsContext.configure.target_metadata`\ 을 사용하여 "
+"명명 규칙이 :class:`.Operations`\ 에 전달 된다."
 #: ../naming.rst:189
 msgid "Above, when we render a directive like the following::"
-msgstr ""
+msgstr "위와 같이 다음과 같은 지시어를 렌더링 할 때:"
 
 #: ../naming.rst:193
 msgid ""
@@ -166,6 +221,8 @@ msgid ""
 "``\"ck_sometable_q_bool\"``, assuming the backend in use does not support"
 " native boolean types."
 msgstr ""
+"부울 타입은 사용중인 백엔드가 네이티브 부울 유형을 지원하지 않는다고 "
+"가정하고 ``\"ck_sometable_q_bool\"``\ 이름으로 CHECK 제한 조건을 렌더링한다 ."
 
 #: ../naming.rst:197
 msgid ""
@@ -174,6 +231,9 @@ msgid ""
 "``None`` will be converted into a name that follows the appopriate naming"
 " conventions::"
 msgstr ""
+"또한 제약 조건이있는 op 지시문을 사용할 수 있으며 명명 규칙에 필요하지 않으면 "
+"이름을 지정하지 않아도 된다. ``None``\ 의 값은 알맞은 이름 지정 규칙을 따르는 이름으로"
+"변환된다::"
 
 #: ../naming.rst:205
 msgid ""
@@ -183,10 +243,15 @@ msgid ""
 "directive :meth:`.Operations.f` which denotes that the string has already"
 " been tokenized::"
 msgstr ""
+"autogenerate은 마이그레이션 스크립트에서 제약 조건을 렌더링 할 때 일반적으로  완료된 이름으로 "
+"렌더링한다. 적어도 Alembic 0.6.4와 SQLAlchemy 0.9.4를 사용 "
+"한다면, 문자열이 이미 토큰 화되었음을 나타내는 특별한 지시어 :meth:`.Operations.f`\ 로 렌더링"
+"될 것이다.::"
+
 
 #: ../naming.rst:215
 msgid ""
 "For more detail on the naming convention feature, see "
 ":ref:`sqla:constraint_naming_conventions`."
 msgstr ""
-
+"명명 규칙 기능에 대한 자세한 내용은 :ref:`sqla:constraint_naming_conventions`\ 을 참조하십시오."
